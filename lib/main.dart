@@ -1,5 +1,6 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -48,6 +49,7 @@ class MyAppState extends ChangeNotifier {
 
 class MyHomePage extends StatefulWidget {
   @override
+  //myhome page se _MyHomePage waali widget pe jaayega.
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
@@ -67,41 +69,46 @@ switch (selectedIndex) {
   default:
     throw UnimplementedError('no widget for $selectedIndex');
 }
+//LayoutBuilder. It lets you change your 
+//widget tree depending on how much available space you have.
+    return LayoutBuilder(
+      builder: (context,Constraints) {
+        return Scaffold(
+          body: Row(
+            children: [
+              SafeArea(
+                child: NavigationRail(
+                  extended: Constraints.maxWidth >= 600,
+                  destinations: [
+                    NavigationRailDestination(
+                      icon: Icon(Icons.home),
+                      label: Text('Home'),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.favorite),
+                      label: Text('Favorites'),
+                    ),
+                  ],
+                  selectedIndex: selectedIndex,
+                  //shade ko icon pe rok dea hai
+                  onDestinationSelected: (value) {
 
-    return Scaffold(
-      body: Row(
-        children: [
-          SafeArea(
-            child: NavigationRail(
-              extended: false,
-              destinations: [
-                NavigationRailDestination(
-                  icon: Icon(Icons.home),
-                  label: Text('Home'),
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
                 ),
-                NavigationRailDestination(
-                  icon: Icon(Icons.favorite),
-                  label: Text('Favorites'),
+              ),
+              Expanded(
+                child: Container(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  child: page,
                 ),
-              ],
-              selectedIndex: selectedIndex,
-              //shade ko icon pe rok dea hai
-              onDestinationSelected: (value) {
-
-                setState(() {
-                  selectedIndex = value;
-                });
-              },
-            ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Container(
-              color: Theme.of(context).colorScheme.primaryContainer,
-              child: page,
-            ),
-          ),
-        ],
-      ),
+        );
+      }
     );
   }
 }
