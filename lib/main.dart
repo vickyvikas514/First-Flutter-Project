@@ -48,6 +48,11 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void RemoveFavorite(WordPair Element){
+    favorites.remove(Element);
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -123,7 +128,7 @@ class GeneratorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
-
+    //contain Icon's Data whether heart is filled or not
     IconData icon;
     if (appState.favorites.contains(pair)) {
       icon = Icons.favorite;
@@ -211,12 +216,117 @@ class FavoritesPage extends StatelessWidget {
           child: Text('You have '
               '${appState.favorites.length} favorites:'),
         ),
+
+
         for (var pair in appState.favorites)
+        //this for loop create each line
+        //List Title provide structure for each line.
+
+        //if we want to add anything to favorites word line
+        // we have to done here under ListTitle like Remove button
           ListTile(
-            leading: Icon(Icons.favorite),
-            title: Text(pair.asLowerCase),
+            leading: IconButton(icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
+            onPressed: (){
+              appState.RemoveFavorite(pair);
+            },),
+
+            title: Text(
+              pair.asPascalCase,
+              
+            ),
           ),
       ],
     );
   }
 }
+
+
+/*practice page 
+class PracticePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    var appState = context.watch<MyAppState>();
+    if(appState.favorites.isEmpty){
+      return Center(
+        child: Text('No favorites yet'),
+      );
+    } return ListView(
+      children: [
+        Padding(padding: const EdgeInsets.all(20),
+        child: Text('You got'
+        '${appState.favorites.length} favorites:'),
+        ),
+        for(var pair in appState.favorites)
+        //this for loop create each line
+        //List Title provide structure for each line.
+        ListTile(
+          leading: Icon(Icons.favorite),
+          title: Text(pair.asPascalCase),
+        )
+      ],
+    )
+
+  }
+
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
