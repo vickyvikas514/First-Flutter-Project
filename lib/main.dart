@@ -31,7 +31,30 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+  //to remembering last elements
+  var history = <WordPair>[];
+
+
+//Normally, flutter will not use Global Keys.
+// When you create a stateful widget, two object get created: 
+//a widget, and it's state. The idea is that
+// the widget itself will be destroyed at the end of the build 
+//(or after it is painted on the screen).
+  GlobalKey?historyListKey;
+
+
+
   void getNext() {
+    //filling the history element
+    history.insert(0,current);
+
+
+    //more or less introducing animation
+    //AnimatedListState Widget is the state for a scrolling container that animates items 
+    //when they are inserted or removed.
+    // When an item is inserted with insertItem an animation begins running.
+    var animatedList = historyListKey?.currentState as AnimatedListState?;
+    animatedList?.insertItem(0);
 
     current = WordPair.random();
     //notify listner, tell all other objects about the change happening in this context
@@ -40,11 +63,13 @@ class MyAppState extends ChangeNotifier {
 
   var favorites = <WordPair>[];
 
-  void toggleFavorite() {
-    if (favorites.contains(current)) {
-      favorites.remove(current);
+  void toggleFavorite([WordPair?pair]) {
+    pair = pair??current;
+
+    if (favorites.contains(pair)) {
+      favorites.remove(pair);
     } else {
-      favorites.add(current);
+      favorites.add(pair);
     }
     notifyListeners();
   }
@@ -57,7 +82,7 @@ class MyAppState extends ChangeNotifier {
 
 class MyHomePage extends StatefulWidget {
   @override
-  //myhome page se _MyHomePage waali widget pe jaayega.\
+  //myhome page se _MyHomePage (nicche hai)waali widget pe jaayega.\
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
